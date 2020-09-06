@@ -1,0 +1,29 @@
+class Solution:
+    def find(self, nums, min_v):
+        # 找到最长连续递增子序列,需包含第一个
+        dp = []         # 用于存储每一个元素处的最大序列的长度
+
+        n = len(nums)
+        max_ = 0
+        for i in range(n):
+            tmp = 1
+            for j in range(0,i):
+                if nums[j]<nums[i] and nums[j]>= min_v:
+                    tmp = max(tmp,1+dp[j])
+            dp.append(tmp)
+            if max_ < tmp:
+                max_ = tmp
+        return max_
+        
+
+    def findMax(self, nums):
+        equal_index = []
+        for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                if nums[i] == nums[j]:
+                    equal_index.append((i,j))
+        maxLen = 0
+        for i,j in equal_index:
+            currentLen = min(self.find(nums[:i+1][::-1], nums[i]), self.find(nums[j:], nums[j]))
+            maxLen = max(maxLen, currentLen)
+        return 2*maxLen
