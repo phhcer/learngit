@@ -17,13 +17,20 @@ class Solution:
         
 
     def findMax(self, nums):
-        equal_index = []
-        for i in range(len(nums)):
-            for j in range(i+1,len(nums)):
-                if nums[i] == nums[j]:
-                    equal_index.append((i,j))
+        equal_dict = {}
+        for i,num in enumerate(nums):
+            if num in equal_dict:
+                equal_dict[num].append(i)
+            else:
+                equal_dict[num] = [i]
         maxLen = 0
-        for i,j in equal_index:
-            currentLen = min(self.find(nums[:i+1][::-1], nums[i]), self.find(nums[j:], nums[j]))
-            maxLen = max(maxLen, currentLen)
+        for num, indexs in equal_dict.items():
+            n = len(indexs)
+            if n >= 2:
+                for i_ in range(n-1):
+                    i = indexs[i_]
+                    for j_ in range(i_+1, n):
+                        j = indexs[j_]
+                        currentLen = min(self.find(nums[:i+1][::-1], nums[i]), self.find(nums[j:], nums[j]))
+                        maxLen = max(maxLen, currentLen)
         return 2*maxLen
